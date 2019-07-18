@@ -116,9 +116,9 @@ class Punishment(commands.Cog):
         self.mutes.append((member, datetime.datetime.now(), n_seconds, reason))
 
         if reason:
-            desc = f"You have been **muted** in the Speedrunners discord server for the following reason:\n```{reason}```"
+            desc = f"You have been **muted** in the Speedrunners discord server for {str(datetime.timedelta(seconds=n_seconds))} for the following reason:\n```{reason}```"
         else:
-            desc = f"You have been **muted** in the Speedrunners discord server"
+            desc = f"You have been **muted** in the Speedrunners discord server for {str(datetime.timedelta(seconds=n_seconds))}"
         embed = discord.Embed(description=desc, color=EmbedColor.dark_green)
         await member.send(embed=embed)
 
@@ -171,7 +171,7 @@ class Punishment(commands.Cog):
             if member in [be[0] for be in bans]:
                 return True
             else:
-                ctx.send(embed=await error(f"{str(member)} is not currently banned"))
+                await ctx.send(embed=await error(f"{str(member)} is not currently banned"))
                 return False
 
         await self.moderate(ctx, member, reason, "unbanned", "ban_log", EmbedColor.green, callback, check)
