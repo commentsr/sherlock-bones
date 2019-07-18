@@ -1,0 +1,5 @@
+#!/bin/bash
+./directory_structure
+clear
+cd src
+python3 -m bot.py
