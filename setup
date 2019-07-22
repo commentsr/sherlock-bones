@@ -1,0 +1,11 @@
+#!/bin/bash
+mkdir -p data
+mkdir -p logs
+
+for file in "edit_log delete_log warn_log mute_log kick_log ban_log"; do
+	touch "logs/$file"
+done
+
+for file in "channels.json guilds.json roles.json metadata.json cogs.json"; do
+	touch "data/$file"
+done
