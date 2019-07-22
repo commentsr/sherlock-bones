@@ -1,6 +1,7 @@
 import os
 import json
 
+from .member import get_member
 
 class data:
 	pass
