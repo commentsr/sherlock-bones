@@ -42,7 +42,7 @@ class Punishment(commands.Cog):
                     "timestamp": datetime.datetime.now().isoformat()
                 }
 
-                await log(self.bot, log_data, "mute_log", EmbedColor.green)
+                await log(self.bot, member.id, log_data, "mute_log", EmbedColor.green)
 
                 desc = f"You have been **unmuted** in the Speedrunners discord server"
                 embed = discord.Embed(description=desc, color=EmbedColor.dark_green)
@@ -66,12 +66,12 @@ class Punishment(commands.Cog):
 
         log_data = {
             f"{word}": str(member),
-            f"{word} by": ctx.author.name,
+            f"{word} by": str(ctx.author),
             "reason": reason,
             "timestamp": datetime.datetime.now().isoformat()
         }
 
-        await log(ctx.bot, log_data, logname, color)
+        await log(ctx.bot, member.id, log_data, logname, color)
 
         if reason:
             desc = f"You have been **{word}** in the Speedrunners discord server for the following reason:\n```{reason}```"
@@ -111,7 +111,7 @@ class Punishment(commands.Cog):
             "reason": reason,
             "timestamp": datetime.datetime.now().isoformat()
         }
-        await log(self.bot, log_data, "mute_log", EmbedColor.orange)
+        await log(self.bot, member.id, log_data, "mute_log", EmbedColor.orange)
 
         self.mutes.append((member, datetime.datetime.now(), n_seconds, reason))
 
@@ -176,28 +176,6 @@ class Punishment(commands.Cog):
 
         await self.moderate(ctx, member, reason, "unbanned", "ban_log", EmbedColor.green, callback, check)
 
-
-    @commands.command()
-    async def purge(self, ctx, n_messages):
-        try:
-            n_messages = int(n_messages)
-        except ValueError:
-            await ctx.send(embed=await error(f"Invalid number of messages '{n_messages}'"))
-            return
-        if not (0 < n_messages <= 100):
-            await ctx.send(embed=await error(f"Number of messages must be 0-100"))
-            return
-        await ctx.channel.purge(limit=n_messages+1)
-
-        log_data = {
-            "channel": ctx.channel.name,
-            "purged by": str(ctx.author),
-            "number": str(n_messages),
-            "timestamp": datetime.datetime.now().isoformat()
-        }
-        await log(self.bot, log_data, "delete_log", EmbedColor.red)
-
-        await ctx.send(embed=await success(f"Successfully purged {n_messages} messages"))
 
 
 def setup(bot):

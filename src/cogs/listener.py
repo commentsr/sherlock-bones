@@ -24,7 +24,7 @@ class Listener(commands.Cog):
     		"after": after.clean_content,
     		"timestamp": datetime.datetime.now().isoformat()
     	}
-    	await log(self.bot, log_data, "edit_log", EmbedColor.orange)
+    	await log(self.bot, after.author.id, log_data, "edit_log", EmbedColor.orange)
 
 
     @commands.Cog.listener()
@@ -38,7 +38,7 @@ class Listener(commands.Cog):
     		"message": message.clean_content,
     		"timestamp": datetime.datetime.now().isoformat()
     	}
-    	await log(self.bot, log_data, "delete_log", EmbedColor.red)
+    	await log(self.bot, message.author.id, log_data, "delete_log", EmbedColor.red)
 
 
 def setup(bot):

@@ -1,11 +1,8 @@
 import os
 import json
 
-from .member import get_member
-
 class data:
 	pass
-
 
 def read_data(bot):
 	data_dir = os.path.join(bot.root_dir, "data")
@@ -20,3 +17,14 @@ def read_data(bot):
 
 		file.close()
 	return data
+
+
+def read_logs(bot):
+	logs_dir = os.path.join(bot.root_dir, "logs")
+	logs = {}
+	for filename in os.listdir(logs_dir):
+		logs[filename] = []
+		file = open(os.path.join(bot.root_dir, "logs", filename), "r")
+		for line in file.readlines():
+			logs[filename].append(json.loads(line))
+	return logs
