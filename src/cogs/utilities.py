@@ -4,7 +4,7 @@ from discord.ext import commands
 import datetime
 import itertools
 
-from utils import get_member, log, error, success, EmbedColor, read_logs
+from utils import get_member, log, error, success, EmbedColor, read_logs, is_admin
 
 class Utilities(commands.Cog):
     def __init__(self, bot):
@@ -12,10 +12,23 @@ class Utilities(commands.Cog):
 
 
     async def cog_check(self, ctx):
-        roles = ctx.author.roles
-        admin_main = ctx.guild.get_role(self.bot.data.roles["admin_main"])
-        admin_management = ctx.guild.get_role(self.bot.data.roles["admin_management"])
-        return admin_main in roles or admin_management in roles
+        return await is_admin(self.bot, ctx)
+
+
+    @commands.command()
+    async def rules(self, ctx):
+        if not await is_admin(self.bot, ctx):
+            return
+
+        embed = discord.Embed(color=EmbedColor.dark_green)
+        for number, rule in self.bot.data.rules.items():
+            title = f"Rule {number} - {rule['title']}"
+            description = "\n".join(rule['description']) or u"\u200b"
+            embed.add_field(name=title, value=description)
+
+        embed.set_author(name="SpeedRunners server rules", icon_url=self.bot.get_guild(self.bot.data.guilds["main"]).icon_url)
+
+        await ctx.send(embed=embed)
 
 
     @commands.command()

@@ -5,7 +5,7 @@ import asyncio
 import datetime
 from pytimeparse import parse as parse_time
 
-from utils import get_member, log, error, success, EmbedColor
+from utils import get_member, log, error, success, EmbedColor, is_admin
 
 class Punishment(commands.Cog):
     def __init__(self, bot):
@@ -15,10 +15,7 @@ class Punishment(commands.Cog):
 
 
     async def cog_check(self, ctx):
-        roles = ctx.author.roles
-        admin_main = ctx.guild.get_role(self.bot.data.roles["admin_main"])
-        admin_management = ctx.guild.get_role(self.bot.data.roles["admin_management"])
-        return admin_main in roles or admin_management in roles
+        return await is_admin(self.bot, ctx)
 
 
     async def mute_check(self):
