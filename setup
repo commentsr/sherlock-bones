@@ -6,6 +6,6 @@ for file in "edit_log" "delete_log" "warn_log" "mute_log" "kick_log" "ban_log"; 
 	touch "logs/$file"
 done
 
-for file in "channels.json" "guilds.json" "roles.json" "metadata.json" "cogs" "rules.json"; do
+for file in "channels.json" "guilds.json" "roles.json" "metadata.json" "cogs" "rules.json" "commands_metadata.json"; do
 	touch "data/$file"
 done

@@ -9,7 +9,7 @@ import os
 bot = commands.Bot("")
 setattr(bot, "root_dir", os.path.dirname(os.getcwd()))
 setattr(bot, "data", read_data(bot))
-
+bot.remove_command("help")
 
 @bot.listen()
 async def on_ready():
