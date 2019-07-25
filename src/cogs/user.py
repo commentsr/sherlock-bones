@@ -78,6 +78,29 @@ class User(commands.Cog):
 
 
     @commands.command()
+    async def online(self, ctx):
+        guild = self.bot.get_guild(self.bot.data.guilds["main"])
+        member_count = guild.member_count
+        status_count = [0, 0, 0, 0, 0]  # online, offline, idle, dnd, invisible
+        status_list = list(discord.Status)
+        for member in guild.members:
+            status_count[status_list.index(member.status)] += 1
+
+        stats = discord.Embed(color=EmbedColor.dark_green)
+        stats.add_field(name=f"Total: {member_count}", value="\n".join([
+            f"<:online:572884944813031434>{status_count[0]}",
+            f"<:idle:572884943898673174>{status_count[2]}",
+            f"<:do_not_disturb:572884944016113666>{status_count[3]}",
+            f"<:offline:572884944343269378>{status_count[1] + status_count[4]}"]))
+        await ctx.send(embed=stats)
+
+
+    @commands.command()
+    async def ping(self, ctx):
+        await ctx.send(embed=await success(f"Pong! ({round(self.bot.latency, 3) * 1000}ms)"))
+
+
+    @commands.command()
     async def rule(self, ctx, number=None):
         async def _error():
             await ctx.send(embed=await error(f"Invalid rule number '{number}', must be 1-{len(self.bot.data.rules.keys())}"))
