@@ -43,7 +43,11 @@ class Punishment(commands.Cog):
 
                 desc = f"You have been **unmuted** in the Speedrunners discord server"
                 embed = discord.Embed(description=desc, color=EmbedColor.dark_green)
-                await member.send(embed=embed)
+
+                try:
+                    await member.send(embed=embed)
+                except discord.errors.Forbidden:
+                    pass
 
             await asyncio.sleep(5)
 
@@ -75,7 +79,11 @@ class Punishment(commands.Cog):
         else:
             desc = f"You have been **{word}** in the Speedrunners discord server"
         embed = discord.Embed(description=desc, color=EmbedColor.dark_green)
-        await member.send(embed=embed)
+        
+        try:
+            await member.send(embed=embed)
+        except discord.errors.Forbidden:
+            pass
 
         await ctx.send(embed=await success(f"Successfully {word} {str(member)}"))
 
@@ -117,7 +125,11 @@ class Punishment(commands.Cog):
         else:
             desc = f"You have been **muted** in the Speedrunners discord server for {str(datetime.timedelta(seconds=n_seconds))}"
         embed = discord.Embed(description=desc, color=EmbedColor.dark_green)
-        await member.send(embed=embed)
+
+        try:
+            await member.send(embed=embed)
+        except discord.errors.Forbidden:
+            pass
 
         await ctx.send(embed=await success(f"Successfully muted {str(member)} for {str(datetime.timedelta(seconds=n_seconds))}"))
 
@@ -148,31 +160,15 @@ class Punishment(commands.Cog):
     @commands.command()
     async def kick(self, ctx, member, *reason):
         async def callback(member):
-            await ctx.guild.kick(member)
+            await self.bot.get_guild(self.bot.data.guilds["main"]).kick(member)
         await self.moderate(ctx, member, reason, "kicked", "kick_log", EmbedColor.orange, callback)
 
 
     @commands.command()
     async def ban(self, ctx, member, *reason):
         async def callback(member):
-            await ctx.guild.ban(member)
+            await self.bot.get_guild(self.bot.data.guilds["main"]).ban(member)
         await self.moderate(ctx, member, reason, "banned", "ban_log", EmbedColor.red, callback)
-
-
-    @commands.command()
-    async def unban(self, ctx, member, *reason):
-        async def callback(member):
-            await ctx.guild.unban(member)
-        async def check(member):
-            bans = await ctx.guild.bans()
-            if member in [be[0] for be in bans]:
-                return True
-            else:
-                await ctx.send(embed=await error(f"{str(member)} is not currently banned"))
-                return False
-
-        await self.moderate(ctx, member, reason, "unbanned", "ban_log", EmbedColor.green, callback, check)
-
 
 
 def setup(bot):
